@@ -18,9 +18,13 @@ export const RouteWrapper: React.FC<{
 }>;
 
 export const EnhanceRoute: React.FC<RouteProps & {
+  /** transition type，default is fade */
   transition?: 'bottom' | 'right' | false;
+  /** cache the Route render component /> */
   keepAlive?: boolean;
+  /** meta data pass to Route render component with props */
   meta?: { [key: string]: any };
+  /** EnhanceRoute wrap el extra className */
   wrapperClassName?: string;
 }>;
 

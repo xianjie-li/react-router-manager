@@ -2,7 +2,7 @@ import React from 'react';
 
 import {
   EnhanceRoute, RouteWrapper, HashRouter, Link,
-} from '@/components';
+} from './components';
 
 import Home from './view/home';
 import About from './view/about';

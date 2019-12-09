@@ -1,6 +1,6 @@
 {
   "name": "@lxjx/react-router-enhance",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "license": "MIT",
@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.7.2",
-    "@lxjx/react-transition-spring": "^1.0.7",
+    "@lxjx/react-transition-spring": "^1.0.9",
     "@types/history": "^4.7.3",
     "@types/prop-types": "^15.7.3",
     "@types/react-router-dom": "^5.1.2",

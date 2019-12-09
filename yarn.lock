@@ -2438,10 +2438,10 @@
     react "^16.11.0"
     react-use "^13.6.3"
 
-"@lxjx/react-transition-spring@^1.0.7":
-  version "1.0.7"
-  resolved "https://registry.npm.taobao.org/@lxjx/react-transition-spring/download/@lxjx/react-transition-spring-1.0.7.tgz#9aabb8ff30dce010471c4cb7055b2401cef408ac"
-  integrity sha1-mqu4/zDc4BBHHEy3BVskAc70CKw=
+"@lxjx/react-transition-spring@^1.0.9":
+  version "1.0.9"
+  resolved "https://registry.npmjs.org/@lxjx/react-transition-spring/-/react-transition-spring-1.0.9.tgz#aef9f82c668c4fa9af79b3c697c76034973b209a"
+  integrity sha512-DW0XRzRXz8QLUvkoJqFOPJdp0q4kedLy6aYFp9NciJdDImxsi5xpKKCg7zjIMoK3QTVkCMzcfvGw89lTN84Npw==
   dependencies:
     "@babel/runtime" "^7.7.2"
     "@lxjx/hooks" "^0.2.5"

@@ -167,6 +167,7 @@ function EnhanceRoute({
               style={__style}
               toggle={show}
               type={actionType}
+              reset={true}
               mountOnEnter
               unmountOnExit={!keepAlive}
             >

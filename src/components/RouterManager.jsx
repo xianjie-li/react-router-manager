@@ -1,18 +1,9 @@
 import React, { useEffect } from "react";
-import { matchPath, withRouter, Router } from "react-router-dom";
-import {} from "history";
+import { matchPath, withRouter } from "react-router-dom";
 import { NotFound } from "./NotFound";
 import { Route } from "./Route";
 import { placeHolderFn } from "./common";
 import propTypes from "prop-types";
-
-// function RouterManagerWrap() {
-//   return (
-//     <Router>
-//
-//     </Router>
-//   )
-// }
 
 function RouterManagerBase({
   location,
@@ -49,7 +40,7 @@ function RouterManagerBase({
   }
 
   return (
-    <div className="bk-router-wrap">
+    <div className="m78-router-wrap">
       {children}
       <Route path="/404" component={notFound || NotFound} />
     </div>

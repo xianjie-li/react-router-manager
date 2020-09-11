@@ -1,4 +1,4 @@
-.bk-router-wrap {
+.m78-router-wrap {
   position: fixed;
   left: 0;
   right: 0;
@@ -7,7 +7,7 @@
   overflow: hidden;
 }
 
-.bk-router-page {
+.m78-router-page {
   position: absolute;
   left: 0;
   right: 0;
@@ -18,7 +18,7 @@
   -webkit-overflow-scrolling: touch;
 }
 
-.bk-404-page {
+.m78-404-page {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -27,20 +27,20 @@
   font-size: 14px;
 }
 
-.bk-404-page{
+.m78-404-page{
   color: rgba(0,0,0,0.75);
   background-color: #f6f6f6;
 }
 
-.bk-404-page_title {
+.m78-404-page_title {
   color: rgba(0,0,0,0.9);
 }
 
-.bk-404-page_url {
+.m78-404-page_url {
   margin: 12px 0 8px;
   color: rgba(0,0,0,0.45);
 }
 
-.bk-404-page_link {
+.m78-404-page_link {
   color: rgb(24, 144, 255);
 }

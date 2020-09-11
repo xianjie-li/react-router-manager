@@ -68,18 +68,9 @@ function Route({
         // 离场
         const isLeave = isPushLeave || isPopLeave;
 
-        if (props.path === location.pathname) {
-          console.log("isPushEnter", isPushEnter);
-          console.log("isRefreshOrNavEnter", isRefreshOrNavEnter);
-          console.log("isPushLeave", isPushLeave);
-          console.log("isPopLeave", isPopLeave);
-          console.log("isEnter", isEnter);
-          console.log("isLeave", isLeave);
-        }
-
         /* 传递给每一个page包裹元素的prop */
         const baseProps = {
-          className: "bk-router-page" + (className ? ` ${className}` : ""),
+          className: "m78-router-page" + (className ? ` ${className}` : ""),
           "data-path": props.path,
           style: extraStyle
         };

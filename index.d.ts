@@ -3,20 +3,14 @@ import React from "react";
 import { RouteProps, match } from "react-router-dom";
 import { History, Location } from "history";
 
+/** manage Route components list */
 export const RouterManager: React.FC<{
-  /** TODO: 正确组件类型 */
-  notFound?: React.FC<any> | React.Component<any, any>;
+  notFound?: React.ComponentType<RouteComponentProps>;
   onRouteChange?: ({ location: Location, history: History }) => void;
   onNotFound?: ({ location: Location, history: History }) => void;
-  /** 自定义history对象 */
-  history?: History;
-  /** false | 使用hash路由 */
-  hash?: boolean;
 }>;
 
-/** 如果未自定义history对象, 则导出当前使用的history对象 */
-export const history: History;
-
+/** Used to configure a routing item, which is a superset of the Route component of react-router */
 export const Route: React.FC<RouteProps & {
   /** transition type，default is fade */
   transition?: "bottom" | "right" | false;
@@ -30,7 +24,7 @@ export const Route: React.FC<RouteProps & {
   style?: React.CSSProperties;
 }>;
 
-/** 用于页面组件继承的类型，Param为查询解析对象，Meta注册时传入的元数据 */
+/** Types used for page component extends */
 interface RouteComponentProps<Param extends Object = {}, Meta = {}> {
   match: match & { param: Param };
   location: Location;

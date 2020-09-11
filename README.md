@@ -1,8 +1,8 @@
-<h1 align="center">react-transition-route</h1>
+<h1 align="center">react-router-manager</h1>
 
 <h1 align="center">🗺</h1>
 
-<p align="center">react-router manager includes keepAlive transition and more</p>
+<p align="center">react-router manager, contains animation, keepAlive etc.</p>
 
 
 
@@ -11,27 +11,12 @@
 ## ✨`Feature`
 
 * support for routing level keepAlive, keep the route component states.
-* built-in fade, slide type route transition animation
-
-* some convenient things .eg: 404、onRouteChange、route meta data、query parse
+* routing animation without performance loss
+* convenient things .eg: 404 custom、onRouteChange、route meta data、query parse
 * no unnecessary rerender due to animation, such as 
+* centrally manage route
 
-```jsx
-<TransitionGroup>
-    <CSSTransition
-      appear={true}
-      classNames="xxx"
-      timeout={500}
-      key={location.key} // because of the key, it will cause a lot of unnecessary rerender.
-    >
-      <Switch location={location}>
-       {Routes...}
-      </Switch>
-    </CSSTransition>
-</TransitionGroup>
-```
 
-<br>
 
 <br>
 
@@ -46,9 +31,9 @@
 ## 📦`install`
 
 ```shell
-npm install @lxjx/react-router-enhance
+npm install @lxjx/react-router-manager
 # or
-yarn add @lxjx/react-router-enhance
+yarn add @lxjx/react-router-manager
 ```
 
 <br>
@@ -60,10 +45,11 @@ yarn add @lxjx/react-router-enhance
 ```jsx
 import React from 'react';
 
-// output all react-router-dom modules
+import { HashRouter, Link } from "react-router-dom";
+
 import {
-  EnhanceRoute, RouteWrapper, HashRouter, Link,
-} from '@lxjx/react-router-enhance';
+  EnhanceRoute, RouteWrapper,
+} from '@lxjx/react-router-manager';
 
 // pages
 import Home from './view/home';
@@ -125,12 +111,12 @@ export default App;
 
 ## 🎈`props`
 
-### RouteWrapper
+### RouterManager
 
 ```ts
 {
     // a react component, used to replace the built-in 404 component 
-    notFound?: React.FC<any> | React.Component<any, any>
+    notFound?: React.ComponentType<RouteComponentProps>;
     // route change callback
     onRouteChange?: ({
    		location: Location,
@@ -147,18 +133,22 @@ export default App;
 
 <br>
 
-### EnhanceRoute
+### Route
+
+following props and all the prop of react-router-dom `<Route />`
 
 ```ts
 {
-    /** transition type，default is fade */
-  	transition?: 'bottom' | 'right' | false;
-    /** cache the Route render component /> */
-  	keepAlive?: boolean;
-    /** meta data pass to Route render component with props */
-  	meta?: { [key: string]: any };
-	/** EnhanceRoute wrap el extra className */
-  	wrapperClassName?: string;
+  /** transition type，default is fade */
+  transition?: "bottom" | "right" | false;
+  /** not destroy when the page leaves */
+  keepAlive?: boolean;
+  /** extra meta passed to the page component */
+  meta?: { [key: string]: any };
+  /** page className */
+  className?: string;
+  /** page style, avoid using such as display、opacity、transform、z-index, etc. */
+  style?: React.CSSProperties;
 }
 ```
 
@@ -171,28 +161,28 @@ export default App;
 built-in basic styles for routing components that allow you to handle routing conveniently
 
 ```css
-.bk-router-wrap {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: 0;
-    overflow: hidden;
+.m78-router-wrap {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  overflow: hidden;
 }
 
-.bk-router-page {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: 0;
-    overflow: auto;
-    background-color: #f6f6f6;
-    -webkit-overflow-scrolling: touch;
+.m78-router-page {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  overflow: auto;
+  background-color: #f6f6f6;
+  -webkit-overflow-scrolling: touch;
 }
 ```
 
-He can do：
+it can：
 
 * prevent document flow confusion
 * no need to care about html, body, #root height, width...

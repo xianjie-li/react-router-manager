@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { RouterManager, Route } from "./components";
-import { HashRouter, Link, Router } from "react-router-dom";
+import { HashRouter, Link } from "react-router-dom";
 
 import Home from "./view/home";
 import About from "./view/about";
@@ -14,7 +14,6 @@ function N404() {
   return <div>404</div>;
 }
 
-/* TODO: 用户不需要在接触HashRouter等组件 */
 function App() {
   const [count, setCount] = useState(0);
 
@@ -33,7 +32,6 @@ function App() {
           <Link to="/">home</Link>
           <Link to="/about">about</Link>
           <Link to="/list">list</Link>
-          <span onClick={() => setCount(p => p + 1)}>click</span>
         </div>
         <Route
           path="/"

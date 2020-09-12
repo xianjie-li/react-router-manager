@@ -48,7 +48,7 @@ import React from 'react';
 import { HashRouter, Link } from "react-router-dom";
 
 import {
-  EnhanceRoute, RouteWrapper,
+  RouterManager, Route
 } from '@lxjx/react-router-manager';
 
 // pages
@@ -67,7 +67,7 @@ function N404({ location }) {
 function App() {
   return (
     <HashRouter>
-      <RouteWrapper
+      <RouterManager
         notFound={N404}
         onNotFound={({ location }) => { console.log('404', location.pathname); }}
         onRouteChange={({ location }) => { console.log(location.pathname); }}
@@ -77,27 +77,27 @@ function App() {
           <Link to="/about">about</Link>
           <Link to="/list">list</Link>
         </div>
-        <EnhanceRoute 
+        <Route 
             path="/" 
             keepAlive 
             component={Home} 
             wrapperClassName="extra-style"
             exact // receive all Route props except for render、children
             />
-        <EnhanceRoute
+        <Route
           path="/about"
           component={About}
           meta={{ name: 'lxj', age: 'xxx' }}
         />
-        <EnhanceRoute
+        <Route
           path="/list"
           component={List}
           keepAlive
         />
-        <EnhanceRoute path="/detail" transition="right" component={Detail} />
-        <EnhanceRoute path="/detail2" transition="right" component={Detail2} />
-        <EnhanceRoute path="/detail3" transition="right" component={Detail3} />
-      </RouteWrapper>
+        <Route path="/detail" transition="right" component={Detail} />
+        <Route path="/detail2" transition="right" component={Detail2} />
+        <Route path="/detail3" transition="right" component={Detail3} />
+      </RouterManager>
     </HashRouter>
   );
 }

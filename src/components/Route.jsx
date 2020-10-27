@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useMemo, useRef } from "react";
 import { Transition } from "@lxjx/react-transition-spring";
 import { Route as RRRoute } from "react-router-dom";
 import { parse } from "query-string";
@@ -25,20 +25,26 @@ function Route({
   });
 
   // 未匹配阻止更新
-  const MemoComponent = React.memo(Component, (prevProps, nextProps) => {
-    return !nextProps.match;
-  });
+  const MemoComponent = useMemo(() => {
+    const fn = React.memo(Component, (prevProps, nextProps) => {
+      return !nextProps.match;
+    });
+
+    fn.displayName = `Memo(${Component.name || Component.displayName})`;
+
+    return fn;
+  }, []);
 
   // 前后toggle相同阻止更新
-  const MemoTransition = React.memo(Transition, (prevProps, nextProps) => {
-    return prevProps.toggle === nextProps.toggle;
-  });
+  const MemoTransition = useMemo(() => {
+    const fn = React.memo(Transition, (prevProps, nextProps) => {
+      return prevProps.toggle === nextProps.toggle;
+    });
 
-  MemoComponent.displayName = `Memo(${Component.name ||
-    Component.displayName})`;
+    fn.displayName = `Memo(${Transition.name || Transition.displayName})`;
 
-  MemoTransition.displayName = `Memo(${Transition.name ||
-    Transition.displayName})`;
+    return fn;
+  }, []);
 
   return (
     <RRRoute {...props}>
@@ -123,10 +129,10 @@ function Route({
 
           return (
             <MemoTransition
-              {...baseProps}
-              style={{ ...baseProps.style, ...__style }}
               toggle={show}
               type={actionType}
+              {...baseProps}
+              style={{ ...baseProps.style, ...__style }}
               reset
               mountOnEnter
               unmountOnExit={!keepAlive}

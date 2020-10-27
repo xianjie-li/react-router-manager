@@ -1,6 +1,6 @@
 {
   "name": "@lxjx/react-router-manager",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "license": "MIT",
@@ -13,6 +13,7 @@
     "build": "father build"
   },
   "files": [
+    "./index.d.ts",
     "package.json",
     "dist"
   ],
@@ -27,7 +28,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.7.2",
-    "@lxjx/react-transition-spring": "^1.0.9",
+    "@lxjx/react-transition-spring": "^1.2.2",
     "@types/history": "^4.7.3",
     "@types/prop-types": "^15.7.3",
     "@types/react-router-dom": "^5.1.2",

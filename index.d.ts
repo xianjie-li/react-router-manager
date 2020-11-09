@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from "react";
 import { RouteProps, match } from "react-router-dom";
 import { History, Location } from "history";
@@ -18,16 +17,18 @@ export const Route: React.FC<RouteProps & {
   keepAlive?: boolean;
   /** extra meta passed to the page component */
   meta?: { [key: string]: any };
+  /** enhanced component, used for authentication, layout, etc. */
+  within?: (Component?: React.ComponentType<any>) => React.ComponentType<any>;
   /** page className */
   className?: string;
   /** page style, avoid using such as display、opacity、transform、z-index, etc. */
   style?: React.CSSProperties;
 }>;
 
-/** Types used for page component extends */
-interface RouteComponentProps<Param extends Object = {}, Meta = {}> {
-  match: match & { param: Param };
+/** route-level page props, is used to inherit extend */
+export interface RouteComponentProps<Query extends Object = {}, Meta = {}> {
+  match: match & { query: Partial<Query> /* query is unstable */ };
   location: Location;
   history: History;
-  meta?: Meta;
+  meta: Meta;
 }

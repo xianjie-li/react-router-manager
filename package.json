@@ -1,6 +1,6 @@
 {
   "name": "@lxjx/react-router-manager",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "license": "MIT",
@@ -13,7 +13,7 @@
     "build": "father build"
   },
   "files": [
-    "./index.d.ts",
+    "index.d.ts",
     "package.json",
     "dist"
   ],
@@ -21,7 +21,7 @@
     "name": "lixianjie",
     "email": "1073830130@qq.com"
   },
-  "repository": "https://github.com/Iixianjie/react-router-enhance",
+  "repository": "https://github.com/Iixianjie/react-router-manager",
   "peerDependencies": {
     "react": ">= 16.8.0",
     "react-dom": ">= 16.8.0"

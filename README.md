@@ -12,10 +12,8 @@
 
 * support for routing level keepAlive, keep the route component states.
 * routing animation without performance loss
-* convenient things .eg: 404 custom、onRouteChange、route meta data、query parse
-* no unnecessary rerender due to animation, such as 
+* 404 custom、onRouteChange、route meta data、query parse、etc.
 * centrally manage route
-
 
 
 <br>
@@ -138,17 +136,36 @@ export default App;
 following props and all the prop of react-router-dom `<Route />`
 
 ```ts
-{
+import { RouteProps } from "react-router-dom";
+
+const Route: React.FC<RouteProps & {
   /** transition type，default is fade */
   transition?: "bottom" | "right" | false;
   /** not destroy when the page leaves */
   keepAlive?: boolean;
   /** extra meta passed to the page component */
   meta?: { [key: string]: any };
+  /** enhanced component, used for authentication, layout, etc. */
+  within?: (Component?: React.ComponentType<any>) => React.ComponentType<any>;
   /** page className */
   className?: string;
   /** page style, avoid using such as display、opacity、transform、z-index, etc. */
   style?: React.CSSProperties;
+}>
+```
+
+<br>
+
+### RouteComponentProps
+
+route-level page props, is used to inherit extend
+
+```ts
+interface RouteComponentProps<Param extends Object = {}, Meta = {}> {
+  match: match & { params: Param };
+  location: Location;
+  history: History;
+  meta: Meta;
 }
 ```
 
@@ -187,7 +204,7 @@ it can：
 * prevent document flow confusion
 * no need to care about html, body, #root height, width...
 * scroll bars are maintained by the page itself, rather than using public document scroll bar, which can effectively prevent scrolling confusion
-* no need to lock the scroll bar of the document when modal is show
+* no need to lock the scroll bar of the document when modal/dialog is show
 * It is more convenient to manage pages
 
 <br>

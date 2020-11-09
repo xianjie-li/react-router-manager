@@ -16,6 +16,7 @@ function Route({
   transition = true,
   keepAlive = false,
   meta = {},
+  within,
   className = "",
   style: extraStyle,
   ...props
@@ -26,11 +27,18 @@ function Route({
 
   // 未匹配阻止更新
   const MemoComponent = useMemo(() => {
-    const fn = React.memo(Component, (prevProps, nextProps) => {
+    let fn = React.memo(Component, (prevProps, nextProps) => {
       return !nextProps.match;
     });
 
-    fn.displayName = `Memo(${Component.name || Component.displayName})`;
+    const dn = Component.name || Component.displayName;
+
+    if (within) {
+      fn = within(fn);
+      fn.displayName = `${within.name || within.displayName}(${dn})`;
+    } else {
+      fn.displayName = `Memo(${dn})`;
+    }
 
     return fn;
   }, []);
@@ -85,8 +93,8 @@ function Route({
         isLeave && (baseProps["data-leave"] = "");
 
         /* 存在查询时，将其转换为对象并设置到match */
-        if (match && location.search) {
-          match.params = parse(location.search);
+        if (match) {
+          match.query = location.search ? parse(location.search) : {};
         }
 
         /** 传递给page组件的props */
@@ -162,6 +170,8 @@ function Route({
     </RRRoute>
   );
 }
+
+Route.displayName = "RouteManagerRoute";
 
 Route.propTypes = {
   ...RRRoute.propTypes,

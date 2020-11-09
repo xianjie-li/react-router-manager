@@ -14,6 +14,12 @@ function N404() {
   return <div>404</div>;
 }
 
+function withGG(Component) {
+  return function Myfunction() {
+    return <div>Component</div>;
+  };
+}
+
 function App() {
   const [count, setCount] = useState(0);
 
@@ -42,6 +48,12 @@ function App() {
         />
         <Route
           path="/about"
+          component={About}
+          meta={{ name: "lxj", age: "xxx" }}
+          within={withGG}
+        />
+        <Route
+          path="/about/:id"
           component={About}
           meta={{ name: "lxj", age: "xxx" }}
         />

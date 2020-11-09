@@ -1,9 +1,9 @@
 import React from "react";
 
-const Home = () => {
+const Home = pp => {
   const [count, setCount] = React.useState(0);
 
-  console.log("home render");
+  console.log("home render", pp);
   return <div onClick={() => setCount(p => p + 1)}>Home {count}</div>;
 };
 

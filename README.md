@@ -5,20 +5,44 @@
 <p align="center">react-router manager, contains animation, keepAlive etc.</p>
 
 
+<br>
+
+<!-- TOC -->
+
+- [✨`feature`](#✨feature)
+- [🎨`example`](#🎨example)
+- [📦`install`](#📦install)
+- [🤔`usage`](#🤔usage)
+    - [basic](#basic)
+    - [keepAlive](#keepalive)
+    - [auth page](#auth-page)
+    - [custom 404 page](#custom-404-page)
+    - [page meta](#page-meta)
+    - [events](#events)
+- [🎈`API`](#🎈api)
+  - [RouterManager](#routermanager)
+  - [Route](#route)
+  - [RouteComponentProps](#routecomponentprops)
+  - [triggerPageUpdate](#triggerpageupdate)
+- [🎄`other`](#🎄other)
+  - [page base style](#page-base-style)
+  - [query](#query)
+
+<!-- /TOC -->
+
 
 <br>
 
-## ✨`Feature`
+## ✨`feature`
 
 * support for routing level keepAlive, keep the route component states.
 * routing animation without performance loss
-* 404 custom、onRouteChange、route meta data、query parse、etc.
+* 404 custom、onRouteChange、route meta data、query parse、auth page、etc.
 * centrally manage route
-
 
 <br>
 
-## 🎨`demo`
+## 🎨`example`
 
 ![loading...](./demo.gif)
 
@@ -38,7 +62,11 @@ yarn add @lxjx/react-router-manager
 
 <br>
 
-## 🤔`Usage`
+## 🤔`usage`
+
+#### basic
+
+The most basic usage is almost the same as react router
 
 ```jsx
 import React from 'react';
@@ -50,51 +78,26 @@ import {
 } from '@lxjx/react-router-manager';
 
 // pages
-import Home from './view/home';
-import About from './view/about';
-import List from './view/list';
-import Detail from './view/detail';
-import Detail2 from './view/detail2';
-import Detail3 from './view/detail3';
-
-// custom 404
-function N404({ location }) {
-  return <div>404 {location.pathname}</div>;
-}
+import Home from './home';
+import About from './about';
 
 function App() {
   return (
     <HashRouter>
-      <RouterManager
-        notFound={N404}
-        onNotFound={({ location }) => { console.log('404', location.pathname); }}
-        onRouteChange={({ location }) => { console.log(location.pathname); }}
-      >
-        <div className="link-bar">
+      <RouterManager>
+        <div>
           <Link to="/">home</Link>
           <Link to="/about">about</Link>
-          <Link to="/list">list</Link>
         </div>
         <Route 
             path="/" 
-            keepAlive 
             component={Home} 
-            wrapperClassName="extra-style"
             exact // receive all Route props except for render、children
             />
         <Route
           path="/about"
           component={About}
-          meta={{ name: 'lxj', age: 'xxx' }}
         />
-        <Route
-          path="/list"
-          component={List}
-          keepAlive
-        />
-        <Route path="/detail" transition="right" component={Detail} />
-        <Route path="/detail2" transition="right" component={Detail2} />
-        <Route path="/detail3" transition="right" component={Detail3} />
       </RouterManager>
     </HashRouter>
   );
@@ -105,75 +108,191 @@ export default App;
 
 <br>
 
+#### keepAlive
+
+Pass in keepAlive so that a page will not be destroyed when it is unmounted
+
+```jsx
+<XX>
+    <Route path="/page1" keepAlive component={Page1} />
+    <Route path="/page2" component={Page2} />
+</XX>
+```
+
+use triggerPageUpdate to reload cached pages
+
+```javascript
+triggerPageUpdate('/page1')
+```
+
 <br>
 
-## 🎈`props`
+#### auth page
+
+```jsx
+<RouterManager
+   preInterceptor={({ location }) => {
+   		if (!token && location.pathname !== '/login') return (
+        	<div>Please log in first! <a href="/login">to login</a></div>
+        )
+   }}
+</RouterManager>	
+```
+
+You can also use `within` prop
+
+```tsx
+function withLogin(Component) {
+    return function LoginHOC(props) {
+        if (!token && props.location.pathname !== '/login') return (
+        	<div>Please log in first! <a href="/login">to login</a></div>
+        )
+        
+        return <Component {...props} />
+    }
+}
+
+<Route component={Page2} path="/page2" within={[withLogin]} />
+```
+
+<br>
+
+#### custom 404 page
+
+```jsx
+function N404() {
+  return <div>404</div>;
+}
+
+<RouterManager notFound={N404} >{...}</RouterManager>
+```
+
+<br>
+
+#### page meta
+
+```tsx
+<Route component={Page2} path="/page2" meta={{ title: 'page 2' }} />
+
+// page component
+function Page2({ meta }) {
+    return (
+    	<div>
+        	<Helmet>
+                <meta charSet="utf-8" />
+                <title>{meta.title}</title>
+                <link rel="canonical" href="http://mysite.com/example" />
+            </Helmet>
+        </div>
+    )
+}
+```
+
+<br>
+
+#### events
+
+```jsx
+<RouterManager
+    onNotFound={({ location }) => {
+        console.log('404', location.pathname);
+    }}
+    onRouteChange={({ location }) => {
+        console.log('change', location.pathname);
+    }}
+    >
+</RouterManager>
+```
+
+<br>
+
+<br>
+
+## 🎈`API`
 
 ### RouterManager
 
-```ts
-{
-    // a react component, used to replace the built-in 404 component 
-    notFound?: React.ComponentType<RouteComponentProps>;
-    // route change callback
-    onRouteChange?: ({
-   		location: Location,
-   		history: History
- 	}) => void;
-    // 404 callback
-    onNotFound?: ({
-    	location: Location,
-    	history: History
-  	}) => void;
-}
+manage Route components
 
+```tsx
+export const RouterManager: React.FC<{
+  /** custom 404 page components */
+  notFound?: React.ComponentType<RouteComponentProps>;
+  /** trigger on pathname not found */
+  onNotFound?: ({ location: Location, history: History }) => void;
+  /** trigger on pathname change */
+  onRouteChange?: ({ location: Location, history: History }) => void;
+  /** If reactElement or null is returned, prevent the routing node from rendering and render the returned node */
+  preInterceptor?: (props: RMMatchProps) => React.ReactElement | null;
+  /** Global Route props, covered by local props */
+  routeBaseProps?: RMRouteProps;
+}>
 ```
 
 <br>
 
 ### Route
 
-following props and all the prop of react-router-dom `<Route />`
+Route components, used to configure a routing item, which is a superset of the Route component of react-router
 
-```ts
-import { RouteProps } from "react-router-dom";
-
-const Route: React.FC<RouteProps & {
-  /** transition type，default is fade */
-  transition?: "bottom" | "right" | false;
+```tsx
+export interface RMRouteProps extends RouteProps {
+  /** transition type */
+  transition?: 'bottom' | 'right' | 'fade';
   /** not destroy when the page leaves */
   keepAlive?: boolean;
   /** extra meta passed to the page component */
   meta?: { [key: string]: any };
-  /** enhanced component, used for authentication, layout, etc. */
-  within?: (Component?: React.ComponentType<any>) => React.ComponentType<any>;
+  /** enhanced component, used for authentication, layout, etc. this hoc component should pass all received props like `<Component ...{props} />` */
+  within?: RMWithinHOC[];
   /** page className */
   className?: string;
   /** page style, avoid using such as display、opacity、transform、z-index, etc. */
   style?: React.CSSProperties;
-}>
+}
 ```
 
 <br>
 
 ### RouteComponentProps
 
-route-level page props, is used to inherit extend
+Used for routing component declaration
 
-```ts
-interface RouteComponentProps<Param extends Object = {}, Meta = {}> {
-  match: match & { params: Param };
+```tsx
+export interface RouteComponentProps<
+  Query extends Object = any,
+  Params extends Object = any,
+  Meta extends Object = any
+> {
+  match: match<Params> & { query: Partial<Query> };
   location: Location;
   history: History;
   meta: Meta;
+  pageElRef: React.RefObject<HTMLDivElement>;
 }
 ```
+
+<br>
+
+### triggerPageUpdate
+
+invalid and overload the page cache of keepAlive
+
+```tsx
+export const triggerPageUpdate: (path: string) => void;
+```
+
+
+
+
 
 <br>
 
 <br>
 
 ## 🎄`other`
+
+### page base style
 
 built-in basic styles for routing components that allow you to handle routing conveniently
 

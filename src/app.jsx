@@ -1,23 +1,17 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import { RouterManager, Route } from "./components";
-import { HashRouter, Link } from "react-router-dom";
+import { RouterManager, Route } from './components';
+import { HashRouter, Link } from 'react-router-dom';
 
-import Home from "./view/home";
-import About from "./view/about";
-import List from "./view/list";
-import Detail from "./view/detail";
-import Detail2 from "./view/detail2";
-import Detail3 from "./view/detail3";
+import Home from './view/home';
+import About from './view/about';
+import List from './view/list';
+import Detail from './view/detail';
+import Detail2 from './view/detail2';
+import Detail3 from './view/detail3';
 
 function N404() {
   return <div>404</div>;
-}
-
-function withGG(Component) {
-  return function Myfunction() {
-    return <div>Component</div>;
-  };
 }
 
 function App() {
@@ -26,12 +20,12 @@ function App() {
   return (
     <HashRouter>
       <RouterManager
-        notFound={N404}
+        // notFound={N404}
         onNotFound={({ location }) => {
-          console.log("404", location.pathname);
+          console.log('404', location.pathname);
         }}
         onRouteChange={({ location }) => {
-          console.log("change", location.pathname);
+          console.log('change', location.pathname);
         }}
       >
         <div className="link-bar">
@@ -49,13 +43,18 @@ function App() {
         <Route
           path="/about"
           component={About}
-          meta={{ name: "lxj", age: "xxx" }}
-          within={withGG}
+          meta={{
+            name: 'lxj',
+            age: 'xxx'
+          }}
         />
         <Route
           path="/about/:id"
           component={About}
-          meta={{ name: "lxj", age: "xxx" }}
+          meta={{
+            name: 'lxj',
+            age: 'xxx'
+          }}
         />
         <Route path="/list" component={List} keepAlive />
         <Route path="/detail" transition="right" component={Detail} />

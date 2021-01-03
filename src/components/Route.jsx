@@ -1,28 +1,57 @@
-import React, { useMemo, useRef } from "react";
-import { Transition } from "@lxjx/react-transition-spring";
-import { Route as RRRoute } from "react-router-dom";
-import { parse } from "query-string";
-import propTypes from "prop-types";
-import { firstUpperCase } from "./common";
+import React, { useContext, useMemo, useRef, useState } from 'react';
+import { Transition } from '@lxjx/react-transition-spring';
+import { Route as RRoute } from 'react-router-dom';
+import { parse } from 'query-string';
+import propTypes from 'prop-types';
+import {
+  firstUpperCase,
+  getRandString,
+  preInterceptorHandle,
+  updateEvent
+} from './common';
+import context from './context';
 
-const transitionType = ["bottom", "right"];
+const transitionType = ['bottom', 'right', 'fade'];
 
-function Route({
-  /* 禁用render和children渲染 */
-  render,
-  children,
+function Route(routePassProps) {
+  const ctx = useContext(context);
 
-  component: Component,
-  transition = true,
-  keepAlive = false,
-  meta = {},
-  within,
-  className = "",
-  style: extraStyle,
-  ...props
-}) {
+  const composeProps = {
+    ...ctx.routeBaseProps,
+    ...routePassProps
+  };
+
+  const {
+    /* # 禁用render和children渲染 # */
+    render,
+    children,
+
+    component: Component,
+
+    /* # 剔除内部属性 # */
+    transition,
+    keepAlive = false,
+    meta = {},
+    within,
+    preInterceptor,
+    className = '',
+    style: extraStyle,
+
+    ...props
+  } = composeProps;
+
   const self = useRef({
     matchCount: 0
+  });
+
+  const pageElRef = useRef(null);
+
+  const [updateKey, setUpdateKey] = useState(() => getRandString());
+
+  updateEvent.useEvent(path => {
+    if (path === props.path) {
+      setUpdateKey(getRandString());
+    }
   });
 
   // 未匹配阻止更新
@@ -33,8 +62,8 @@ function Route({
 
     const dn = Component.name || Component.displayName;
 
-    if (within) {
-      fn = within(fn);
+    if (Array.isArray(within) && within.length) {
+      fn = within.reduce((prev, enhancer) => enhancer(prev), fn);
       fn.displayName = `${within.name || within.displayName}(${dn})`;
     } else {
       fn.displayName = `Memo(${dn})`;
@@ -55,11 +84,24 @@ function Route({
   }, []);
 
   return (
-    <RRRoute {...props}>
-      {routeProps => {
-        const { match, history, location } = routeProps;
+    <RRoute {...props} key={updateKey}>
+      {routeChildProps => {
+        const { match, history, location } = routeChildProps;
+
+        const rmMatchProps = {
+          ...routeChildProps,
+          routeProps: routePassProps
+        };
+
+        const [pass, replaceNode] = preInterceptorHandle(
+          rmMatchProps,
+          ctx.preInterceptor
+        );
+
+        if (!pass) return replaceNode;
+
         const show = !!match;
-        const style = show ? {} : { display: "none" };
+        const style = show ? {} : { display: 'none' };
         const action = history.action;
 
         /**
@@ -70,13 +112,13 @@ function Route({
          * - 在toggle没有改变时，阻止任何动画
          * */
         // push新页面
-        const isPushEnter = action === "PUSH" && show;
+        const isPushEnter = action === 'PUSH' && show;
         // 刷新或浏览器导航返回
-        const isRefreshOrNavEnter = action === "POP" && show;
+        const isRefreshOrNavEnter = action === 'POP' && show;
         // 通过push进入其他页面
-        const isPushLeave = action === "PUSH" && !show;
+        const isPushLeave = action === 'PUSH' && !show;
         // 返回其他页面
-        const isPopLeave = action === "POP" && !show;
+        const isPopLeave = action === 'POP' && !show;
         // 入参
         const isEnter = isPushEnter || isRefreshOrNavEnter;
         // 离场
@@ -84,13 +126,13 @@ function Route({
 
         /* 传递给每一个page包裹元素的prop */
         const baseProps = {
-          className: "m78-router-page" + (className ? ` ${className}` : ""),
-          "data-path": props.path,
+          className: 'm78-router-page' + (className ? ` ${className}` : ''),
+          'data-path': props.path,
           style: extraStyle
         };
 
-        isEnter && (baseProps["data-enter"] = "");
-        isLeave && (baseProps["data-leave"] = "");
+        isEnter && (baseProps['data-enter'] = '');
+        isLeave && (baseProps['data-leave'] = '');
 
         /* 存在查询时，将其转换为对象并设置到match */
         if (match) {
@@ -99,9 +141,10 @@ function Route({
 
         /** 传递给page组件的props */
         const pageProps = {
-          ...routeProps,
+          ...routeChildProps,
           match,
-          meta
+          meta,
+          pageElRef
         };
 
         if (match) {
@@ -109,21 +152,19 @@ function Route({
         }
 
         // 带动画渲染
-        if (transition) {
-          let actionType = "fade";
-
+        if (transition && transitionType.indexOf(transition) !== -1) {
+          let actionType = 'fade';
           let __style = {};
 
-          if (isEnter) {
-            __style = { zIndex: 20 };
-          }
+          if (transition === 'fade') {
+            if (isEnter) {
+              __style = { zIndex: 20 };
+            }
 
-          if (isLeave) {
-            __style = { zIndex: 10 };
-          }
-
-          // 如果在预设类型中，设置动画类型
-          if (transitionType.indexOf(transition) !== -1) {
+            if (isLeave) {
+              __style = { zIndex: 10 };
+            }
+          } else {
             const transitionName = firstUpperCase(transition);
 
             if (isPushEnter || isPopLeave) {
@@ -131,7 +172,7 @@ function Route({
             }
 
             if (isRefreshOrNavEnter || isPushLeave) {
-              actionType = "zoom";
+              actionType = 'zoom';
             }
           }
 
@@ -145,6 +186,7 @@ function Route({
               mountOnEnter
               unmountOnExit={!keepAlive}
               appear={!isRefreshOrNavEnter && self.current.matchCount > 1}
+              innerRef={pageElRef}
             >
               <MemoComponent {...pageProps} />
             </MemoTransition>
@@ -154,7 +196,11 @@ function Route({
         /* 普通的keepAlive切换 */
         if (keepAlive && self.current.matchCount > 0) {
           return (
-            <div {...baseProps} style={{ ...baseProps.style, ...style }}>
+            <div
+              {...baseProps}
+              ref={pageElRef}
+              style={{ ...baseProps.style, ...style }}
+            >
               <MemoComponent {...pageProps} />
             </div>
           );
@@ -162,19 +208,19 @@ function Route({
 
         /** 无keepAlive 无动画 */
         return show ? (
-          <div {...baseProps}>
+          <div {...baseProps} ref={pageElRef}>
             <Component {...pageProps} />
           </div>
         ) : null;
       }}
-    </RRRoute>
+    </RRoute>
   );
 }
 
-Route.displayName = "RouteManagerRoute";
+Route.displayName = 'RouteManagerRoute';
 
 Route.propTypes = {
-  ...RRRoute.propTypes,
+  ...RRoute.propTypes,
   component: propTypes.elementType,
   transition: propTypes.oneOf([...transitionType, false]),
   keepAlive: propTypes.bool,

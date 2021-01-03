@@ -18,7 +18,7 @@ module.exports = {
     React: false,
     wx: false,
     WeixinJSBridge: false,
-    PUBLIC: false,
+    PUBLIC: false
   },
   /* 支持最新的es语法 */
   parser: 'babel-eslint',
@@ -75,7 +75,7 @@ module.exports = {
     'no-mixed-operators': 'off',
     'jsx-a11y/click-events-have-key-events': 'off',
     'jsx-a11y/no-static-element-interactions': 'off',
-    "react/jsx-one-expression-per-line": "off",
+    'react/jsx-one-expression-per-line': 'off',
     'no-return-assign': 'off',
     'react/no-find-dom-node': 'off',
     'no-use-before-define': 'off',
@@ -91,10 +91,12 @@ module.exports = {
     'no-new': 'off',
     'arrow-parens': 'off',
     'max-len': 'off',
-    'camelcase': 'off',
+    camelcase: 'off',
     'jsx-a11y/media-has-caption': 'off',
     'jsx-a11y/label-has-associated-control': 'off',
-
+    'jsx-a11y/accessible-emoji': 'off',
+    'comma-dangle': 'off',
+    'object-curly-newline': 'off',
 
     /* ========== React ========== */
 
@@ -108,8 +110,6 @@ module.exports = {
     'react/no-array-index-key': 'off',
     'react/jsx-props-no-spreading': 'off',
 
-    'react-hooks/rules-of-hooks': 'error',
-    'react-hooks/exhaustive-deps': 'warn',
-
+    'react-hooks/rules-of-hooks': 'error'
   }
 };

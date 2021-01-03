@@ -1,6 +1,9 @@
-import React from "react";
+import React from 'react';
 
-export function NotFound({ match, history }) {
+export function NotFound({
+  match,
+  history,
+}) {
   return (
     <div className="m78-404-page">
       <div>

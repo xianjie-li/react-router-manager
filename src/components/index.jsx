@@ -1,9 +1,17 @@
-import React from "react";
-import { createHashHistory, createBrowserHistory } from "history";
+import { createHashHistory, createBrowserHistory } from 'history';
 
-import { Route } from "./Route";
-import { RouterManager } from "./RouterManager";
+import { Route } from './Route';
+import { RouterManager } from './RouterManager';
 
-import "./index.css";
+import './index.css';
+import { updateEvent } from './common';
 
-export { RouterManager, Route, createHashHistory, createBrowserHistory };
+const triggerPageUpdate = updateEvent.emit;
+
+export {
+  RouterManager,
+  Route,
+  createHashHistory,
+  createBrowserHistory,
+  triggerPageUpdate
+};

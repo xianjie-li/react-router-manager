@@ -4,7 +4,6 @@
 
 <p align="center">react-router manager, contains animation, keepAlive etc.</p>
 
-
 <br>
 
 <!-- TOC -->
@@ -19,12 +18,14 @@
     - [custom 404 page](#custom-404-page)
     - [page meta](#page-meta)
     - [events](#events)
+    - [conventional route](#conventional-route)
+    - [typescript tips](#typescript-tips)
 - [🎈`API`](#🎈api)
   - [RouterManager](#routermanager)
   - [Route](#route)
-  - [RouteComponentProps](#routecomponentprops)
+  - [RouteComponent](#routecomponent)
   - [triggerPageUpdate](#triggerpageupdate)
-- [🎄`other`](#🎄other)
+- [🌹`other`](#🌹other)
   - [page base style](#page-base-style)
   - [query](#query)
 
@@ -39,6 +40,9 @@
 * routing animation without performance loss
 * 404 custom、onRouteChange、route meta data、query parse、auth page、etc.
 * centrally manage route
+* conventional route
+
+
 
 <br>
 
@@ -206,6 +210,108 @@ function Page2({ meta }) {
 
 <br>
 
+#### conventional route
+
+Use convention routing, via webpack `require.context API`
+
+1. open config
+
+```jsx
+<RouterManager conventionRouter></RouterManager>
+```
+
+2. conventional dir
+
+```jsx
+/proj
+	/src
+		/Index.jsx	// capitalize is require
+		/News.jsx
+		/About.jsx
+
+// generated like =>
+<Route path="/Index" exact component={/* Index.jsx module */}>
+<Route path="/News" exact component={/* News.jsx module */}>
+<Route path="/About" exact component={/* About.jsx module */}>
+```
+
+3. complex construction
+
+```jsx
+/proj
+	/src
+		/Index
+			/Index.jsx		// => / 			exact
+		/News				
+			/News.jsx		// => /News			exact
+			/Detail.jsx		// => /News/Detail
+		/Center
+			/Center.jsx		// => /Center		exact
+			/Info.jsx		// => /Center/Info
+```
+
+4. config by static prop
+
+```jsx
+import React from 'react';
+
+const Index = () => {
+  return (
+    <div>
+      <div>Home Page</div>
+    </div>
+  );
+};
+
+Index.routerConfig = {
+  keepAlive: true,
+  meta: { title: 'home page' },
+  // any Route Props
+}
+
+export default AddProduct;
+```
+
+<br>
+
+#### typescript tips
+
+Use RouteComponent to declare component
+
+```tsx
+import React from 'react';
+import { RouteComponent } from '@lxjx/react-router-manager';
+
+type Props = {/* ... */};
+type Query = {/* ... */};
+type Param = {/* ... */};
+type Meta = {/* ... */};
+	
+const Index: RouteComponent<Props, Query, Param, Meta> = ({
+    match, // type ✅
+}) => {
+  return (
+    <div>
+      <div>Home Page</div>
+    </div>
+  );
+};
+
+// type ✅
+Index.routerConfig = {
+  keepAlive: true,
+  meta: { title: 'home page' },
+}
+
+export default AddProduct;
+```
+
+
+
+
+
+<br>
+
 <br>
 
 ## 🎈`API`
@@ -223,10 +329,14 @@ export const RouterManager: React.FC<{
   /** trigger on pathname change */
   onRouteChange?: ({ location: Location, history: History }) => void;
   /** If reactElement or null is returned, prevent the routing node from rendering and render the returned node */
-  preInterceptor?: (props: RMMatchProps) => React.ReactElement | null;
+  preInterceptor?: (props: RMMatchProps) => React.ReactElement | null | void;
   /** Global Route props, covered by local props */
   routeBaseProps?: RMRouteProps;
-}>
+  /** Use convention routing, via webpack require.context API */
+  conventionRouter?: boolean;
+  /** trigger on convention routing config created */
+  onConventionRouterConfigCreated?: (conf: RMRouteProps[]) => void;
+}>;
 ```
 
 <br>
@@ -249,26 +359,37 @@ export interface RMRouteProps extends RouteProps {
   className?: string;
   /** page style, avoid using such as display、opacity、transform、z-index, etc. */
   style?: React.CSSProperties;
+  /** route component */
+  component?:
+    | RouteComponent
+    | React.ComponentType<RouteComponentProps>
+    | React.ComponentType<any>;
 }
 ```
 
 <br>
 
-### RouteComponentProps
+### RouteComponent
 
 Used for routing component declaration
 
 ```tsx
-export interface RouteComponentProps<
-  Query extends Object = any,
-  Params extends Object = any,
-  Meta extends Object = any
-> {
+export interface RouteComponentProps<Query = any, Params = any, Meta = any> {
   match: match<Params> & { query: Partial<Query> };
   location: Location;
   history: History;
   meta: Meta;
   pageElRef: React.RefObject<HTMLDivElement>;
+}
+
+// or 
+export interface RouteComponent<
+  Props = any,
+  Query = any,
+  Params = any,
+  Meta = any
+> extends React.FC<RouteComponentProps<Query, Params, Meta> & Props> {
+  routerConfig: RMRouteProps;
 }
 ```
 
@@ -290,7 +411,7 @@ export const triggerPageUpdate: (path: string) => void;
 
 <br>
 
-## 🎄`other`
+## 🌹`other`
 
 ### page base style
 

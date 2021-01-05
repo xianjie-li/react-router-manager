@@ -17,6 +17,11 @@ export interface RMRouteProps extends RouteProps {
   className?: string;
   /** page style, avoid using such as display、opacity、transform、z-index, etc. */
   style?: React.CSSProperties;
+  /** route component */
+  component?:
+    | RouteComponent
+    | React.ComponentType<RouteComponentProps>
+    | React.ComponentType<any>;
 }
 
 /** The match object for users contains a lot of common routing information */
@@ -30,16 +35,22 @@ export interface RMWithinHOC {
 }
 
 /** Used for routing component declaration */
-export interface RouteComponentProps<
-  Query extends Object = any,
-  Params extends Object = any,
-  Meta extends Object = any
-> {
+export interface RouteComponentProps<Query = any, Params = any, Meta = any> {
   match: match<Params> & { query: Partial<Query> };
   location: Location;
   history: History;
   meta: Meta;
   pageElRef: React.RefObject<HTMLDivElement>;
+}
+
+/** Used for routing component declaration */
+export interface RouteComponent<
+  Props = any,
+  Query = any,
+  Params = any,
+  Meta = any
+> extends React.FC<RouteComponentProps<Query, Params, Meta> & Props> {
+  routerConfig: RMRouteProps;
 }
 
 /** manage Route components */
@@ -51,9 +62,13 @@ export const RouterManager: React.FC<{
   /** trigger on pathname change */
   onRouteChange?: ({ location: Location, history: History }) => void;
   /** If reactElement or null is returned, prevent the routing node from rendering and render the returned node */
-  preInterceptor?: (props: RMMatchProps) => React.ReactElement | null;
+  preInterceptor?: (props: RMMatchProps) => React.ReactElement | null | void;
   /** Global Route props, covered by local props */
   routeBaseProps?: RMRouteProps;
+  /** Use convention routing, via webpack require.context API */
+  conventionRouter?: boolean;
+  /** trigger on convention routing config created */
+  onConventionRouterConfigCreated?: (conf: RMRouteProps[]) => void;
 }>;
 
 /** Route components, used to configure a routing item, which is a superset of the Route component of react-router */

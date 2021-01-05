@@ -19,4 +19,8 @@ const Home = pp => {
   );
 };
 
+Home.routerConfig = {
+  keepAlive: true
+};
+
 export default Home;

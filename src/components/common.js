@@ -3,6 +3,7 @@ import { createEvent } from '@lxjx/hooks';
 
 export const placeHolderFn = () => null;
 
+/** 大写首字母 */
 export function firstUpperCase(str = '') {
   if (!str) return '';
   return str.replace(/^./, $1 => $1.toUpperCase());
@@ -17,6 +18,7 @@ export function preInterceptorHandle(props, preInterceptor) {
   return [!(returned === null || React.isValidElement(returned)), returned];
 }
 
+/** 创建一个随机的key TODO: 提到utils */
 export function getRandString() {
   return `K${Math.random()
     .toString()

@@ -3,7 +3,6 @@ import { matchPath, withRouter, Route as RRouter } from 'react-router-dom';
 import { NotFound } from './NotFound';
 import { Route } from './Route';
 import { placeHolderFn } from './common';
-import propTypes from 'prop-types';
 import context from './context';
 import generateConventionRouter from './generateConventionRouter';
 
@@ -47,6 +46,7 @@ function RouterManagerBase({
   useEffect(() => {
     let match = null;
 
+    // 匹配children route
     React.Children.forEach(children, child => {
       if (child.type === Route || child.type === RRouter) {
         const matchRes = matchPath(location.pathname, child.props);
@@ -56,6 +56,7 @@ function RouterManagerBase({
       }
     });
 
+    // 匹配约定式路由
     if (Array.isArray(cr)) {
       cr.forEach(route => {
         const matchRes = matchPath(location.pathname, route);
@@ -81,8 +82,8 @@ function RouterManagerBase({
   return (
     <Provider value={ctx.current}>
       <div className="m78-router-wrap">
-        {children}
         {cr && cr.map(route => <Route key={route.path} {...route} />)}
+        {children}
         <Route path="/404" component={notFound || NotFound} />
       </div>
     </Provider>
@@ -92,11 +93,5 @@ function RouterManagerBase({
 const RouterManager = withRouter(RouterManagerBase);
 
 RouterManager.displayName = 'RouterManager';
-
-RouterManager.propTypes = {
-  notFound: propTypes.elementType,
-  onNotFound: propTypes.func,
-  onRouteChange: propTypes.func
-};
 
 export { RouterManager };

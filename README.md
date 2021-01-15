@@ -347,9 +347,9 @@ Route components, used to configure a routing item, which is a superset of the R
 
 ```tsx
 export interface RMRouteProps extends RouteProps {
-  /** transition type */
+  /** animate transition type */
   transition?: 'bottom' | 'right' | 'fade';
-  /** not destroy when the page leaves */
+  /** no destroy when page leave */
   keepAlive?: boolean;
   /** extra meta passed to the page component */
   meta?: { [key: string]: any };
@@ -361,9 +361,9 @@ export interface RMRouteProps extends RouteProps {
   style?: React.CSSProperties;
   /** route component */
   component?:
-    | RouteComponent
-    | React.ComponentType<RouteComponentProps>
-    | React.ComponentType<any>;
+          | RouteComponent
+          | React.ComponentType<RouteComponentProps>
+          | React.ComponentType<any>;
 }
 ```
 
@@ -382,7 +382,7 @@ export interface RouteComponentProps<Query = any, Params = any, Meta = any> {
   pageElRef: React.RefObject<HTMLDivElement>;
 }
 
-// or 
+// with static config
 export interface RouteComponent<
   Props = any,
   Query = any,

@@ -2,7 +2,6 @@ import React, { useContext, useMemo, useRef, useState } from 'react';
 import { Transition } from '@lxjx/react-transition-spring';
 import { Route as RRoute } from 'react-router-dom';
 import { parse } from 'query-string';
-import propTypes from 'prop-types';
 
 import {
   firstUpperCase,
@@ -219,14 +218,5 @@ function Route(routePassProps) {
 }
 
 Route.displayName = 'RouteManagerRoute';
-
-Route.propTypes = {
-  ...RRoute.propTypes,
-  component: propTypes.elementType,
-  transition: propTypes.oneOf([...transitionType, false]),
-  keepAlive: propTypes.bool,
-  meta: propTypes.object,
-  className: propTypes.string
-};
 
 export { Route };

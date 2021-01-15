@@ -5,9 +5,9 @@ import { History, Location } from 'history';
 
 /** <Route/> component props */
 export interface RMRouteProps extends RouteProps {
-  /** transition type */
+  /** animate transition type */
   transition?: 'bottom' | 'right' | 'fade';
-  /** not destroy when the page leaves */
+  /** no destroy when page leave */
   keepAlive?: boolean;
   /** extra meta passed to the page component */
   meta?: { [key: string]: any };
@@ -43,7 +43,7 @@ export interface RouteComponentProps<Query = any, Params = any, Meta = any> {
   pageElRef: React.RefObject<HTMLDivElement>;
 }
 
-/** Used for routing component declaration */
+/** Used for routing component declaration with static config */
 export interface RouteComponent<
   Props = any,
   Query = any,
@@ -59,6 +59,8 @@ export const RouterManager: React.FC<{
   notFound?: React.ComponentType<RouteComponentProps>;
   /** trigger on pathname not found */
   onNotFound?: ({ location: Location, history: History }) => void;
+  /** 8 | maximum number of keepAlive pages */
+  maxKeepAlive?: number;
   /** trigger on pathname change */
   onRouteChange?: ({ location: Location, history: History }) => void;
   /** If reactElement or null is returned, prevent the routing node from rendering and render the returned node */

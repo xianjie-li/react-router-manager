@@ -1,9 +1,6 @@
 import React from 'react';
 
-export function NotFound({
-  match,
-  history,
-}) {
+export function NotFound({ match, history }) {
   return (
     <div className="m78-404-page">
       <div>
@@ -12,7 +9,7 @@ export function NotFound({
           {match.params && match.params.path}
         </div>
         <a className="m78-404-page_link" onClick={() => history.goBack()}>
-          点击返回
+          go back
         </a>
       </div>
     </div>

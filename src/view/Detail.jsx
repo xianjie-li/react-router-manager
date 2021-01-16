@@ -11,7 +11,7 @@ function AboutSub({ match }) {
 }
 
 AboutSub.routerConfig = {
-  transition: 'right'
+  // transition: 'right'
 };
 
 export default AboutSub;

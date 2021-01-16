@@ -6,6 +6,7 @@ import { parse } from 'query-string';
 import {
   firstUpperCase,
   getRandString,
+  keepAliveMaxHandle,
   preInterceptorHandle,
   updateEvent
 } from './common';
@@ -17,8 +18,9 @@ function Route(routePassProps) {
   const ctx = useContext(context);
 
   const composeProps = {
-    ...ctx.routeBaseProps,
-    ...routePassProps
+    ...ctx.routeBaseProps, // 默认配置
+    ...routePassProps.component.routerConfig, // 组件静态配置
+    ...routePassProps // 传递配置
   };
 
   const {
@@ -36,9 +38,10 @@ function Route(routePassProps) {
     preInterceptor,
     className = '',
     style: extraStyle,
-
     ...props
   } = composeProps;
+
+  const pathname = props.path;
 
   const self = useRef({
     matchCount: 0
@@ -49,7 +52,7 @@ function Route(routePassProps) {
   const [updateKey, setUpdateKey] = useState(() => getRandString());
 
   updateEvent.useEvent(path => {
-    if (path === props.path) {
+    if (path === pathname) {
       setUpdateKey(getRandString());
     }
   });
@@ -93,6 +96,7 @@ function Route(routePassProps) {
           routeProps: routePassProps
         };
 
+        /** 拦截器处理 */
         const [pass, replaceNode] = preInterceptorHandle(
           rmMatchProps,
           ctx.preInterceptor
@@ -127,7 +131,7 @@ function Route(routePassProps) {
         /* 传递给每一个page包裹元素的prop */
         const baseProps = {
           className: 'm78-router-page' + (className ? ` ${className}` : ''),
-          'data-path': props.path,
+          'data-path': pathname,
           style: extraStyle
         };
 
@@ -150,6 +154,15 @@ function Route(routePassProps) {
         if (match) {
           self.current.matchCount += 1;
         }
+
+        // 处理keepAlive最大数量
+        if (keepAlive && match) {
+          keepAliveMaxHandle(ctx, pathname);
+        }
+
+        // 是否应该keepAlive
+        const shouldRenderCache =
+          keepAlive && ctx.cacheList.indexOf(pathname) !== -1;
 
         // 带动画渲染
         if (transition && transitionType.indexOf(transition) !== -1) {
@@ -184,7 +197,7 @@ function Route(routePassProps) {
               style={{ ...baseProps.style, ...__style }}
               reset
               mountOnEnter
-              unmountOnExit={!keepAlive}
+              unmountOnExit={!shouldRenderCache || !keepAlive}
               appear={!isRefreshOrNavEnter && self.current.matchCount > 1}
               innerRef={pageElRef}
             >
@@ -194,7 +207,7 @@ function Route(routePassProps) {
         }
 
         /* 普通的keepAlive切换 */
-        if (keepAlive && self.current.matchCount > 0) {
+        if (shouldRenderCache && keepAlive && self.current.matchCount > 0) {
           return (
             <div
               {...baseProps}

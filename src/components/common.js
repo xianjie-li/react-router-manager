@@ -3,6 +3,8 @@ import { createEvent } from '@lxjx/hooks';
 
 export const placeHolderFn = () => null;
 
+const updateEvent = createEvent();
+
 /** 大写首字母 */
 export function firstUpperCase(str = '') {
   if (!str) return '';
@@ -25,6 +27,27 @@ export function getRandString() {
     .slice(2)}`;
 }
 
-const updateEvent = createEvent();
+export function keepAliveMaxHandle(ctx, pathname) {
+  const cList = ctx.cacheList;
+  const max = ctx.maxKeepAlive;
+
+  const ind = cList.indexOf(pathname);
+
+  if (ind !== -1) {
+    const cur = cList.splice(ind, 1);
+    cList.push(...cur);
+  } else {
+    cList.push(pathname);
+  }
+
+  if (cList.length > max) {
+    const removed = cList.splice(0, cList.length - max);
+
+    // 触发被移除的route更新
+    setTimeout(() => {
+      removed.forEach(p => updateEvent.emit(p));
+    });
+  }
+}
 
 export { updateEvent };

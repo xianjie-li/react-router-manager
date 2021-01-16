@@ -97,6 +97,7 @@ module.exports = {
     'jsx-a11y/accessible-emoji': 'off',
     'comma-dangle': 'off',
     'object-curly-newline': 'off',
+    'operator-linebreak': 'off',
 
     /* ========== React ========== */
 

@@ -20,7 +20,9 @@ const Home = pp => {
 };
 
 Home.routerConfig = {
-  keepAlive: true
+  keepAlive: true,
+  className: '组件类名',
+  style: { color: 'red' }
 };
 
 export default Home;

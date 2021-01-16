@@ -1,6 +1,6 @@
 {
   "name": "@lxjx/react-router-manager",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "license": "MIT",
@@ -29,7 +29,7 @@
   "dependencies": {
     "@babel/runtime": "^7.7.2",
     "@lxjx/hooks": "^1.16.3",
-    "@lxjx/react-transition-spring": "^1.2.5",
+    "@lxjx/react-transition-spring": "^1.2.6",
     "@types/history": "^4.7.3",
     "@types/prop-types": "^15.7.3",
     "@types/react": "^17.0.0",

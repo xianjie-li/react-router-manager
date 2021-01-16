@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import Home from '@/view/Home';
 
 const About = ({ meta }) => {
   console.log('about render', 'width meta: ', meta);
@@ -7,6 +8,10 @@ const About = ({ meta }) => {
       <div>about</div>
     </div>
   );
+};
+
+About.routerConfig = {
+  keepAlive: true
 };
 
 export default About;

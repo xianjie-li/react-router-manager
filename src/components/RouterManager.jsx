@@ -18,10 +18,16 @@ function RouterManagerBase({
   preInterceptor,
   routeBaseProps,
   conventionRouter,
-  onConventionRouterConfigCreated = placeHolderFn
+  onConventionRouterConfigCreated = placeHolderFn,
+  maxKeepAlive = 4
 }) {
-  const ctx = useRef({});
+  const ctx = useRef({
+    /** 记录缓存的页面列表 */
+    cacheList: []
+  });
 
+  /** 最大缓存页面数 */
+  ctx.current.maxKeepAlive = maxKeepAlive;
   /** 前置拦截器 */
   ctx.current.preInterceptor = preInterceptor;
   /** Route基础prop */

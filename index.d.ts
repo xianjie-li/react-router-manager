@@ -59,7 +59,7 @@ export const RouterManager: React.FC<{
   notFound?: React.ComponentType<RouteComponentProps>;
   /** trigger on pathname not found */
   onNotFound?: ({ location: Location, history: History }) => void;
-  /** 8 | maximum number of keepAlive pages */
+  /** 6 | maximum number of keepAlive pages */
   maxKeepAlive?: number;
   /** trigger on pathname change */
   onRouteChange?: ({ location: Location, history: History }) => void;

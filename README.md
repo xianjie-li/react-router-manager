@@ -20,6 +20,7 @@
     - [events](#events)
     - [conventional route](#conventional-route)
     - [typescript tips](#typescript-tips)
+    - [static props](#static-props)
 - [🎈`API`](#🎈api)
   - [RouterManager](#routermanager)
   - [Route](#route)
@@ -304,6 +305,28 @@ Index.routerConfig = {
 }
 
 export default AddProduct;
+```
+
+<br>
+
+#### static props
+
+you can configure the route component with static properties
+
+```tsx
+const Index: RouteComponent<Props, Query, Param, Meta> = () => {
+  return (
+    <div>
+      <div>Home Page</div>
+    </div>
+  );
+};
+
+Index.routerConfig = {
+  // pass any Route props
+  keepAlive: true,
+  meta: { title: 'home page' },
+}
 ```
 
 

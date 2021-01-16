@@ -35,11 +35,11 @@ function filterList(paths, r) {
 
         const path = `/${res.join('/')}`;
         const m = r(pathMeta.originPath);
-        const component = m.default;
+        // const component = m.default;
 
         return {
           path,
-          ...component.routerConfig,
+          // ...component.routerConfig,
           component: m.default,
           exact
         };
@@ -59,8 +59,8 @@ export default function generateConventionRouter() {
   try {
     const contextRequire = require.context(
       // require.context只能静态识别!
-      '../../../../src/view/',
-      // '../view/',
+      // '../../../../src/view/',
+      '../view/',
       true,
       /(\.jsx|\.tsx)$/
     );

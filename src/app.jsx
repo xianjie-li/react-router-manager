@@ -17,6 +17,11 @@ function App() {
         onRouteChange={({ location }) => {
           console.log('change', location.pathname);
         }}
+        maxKeepAlive={2}
+        routeBaseProps={{
+          keepAlive: true,
+          transition: 'right'
+        }}
       >
         <div className="link-bar">
           <Link to="/">home</Link>

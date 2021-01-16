@@ -2458,10 +2458,10 @@
     resize-observer-polyfill "^1.5.1"
     tslib "^1.11.1"
 
-"@lxjx/react-transition-spring@^1.2.5":
-  version "1.2.5"
-  resolved "https://registry.npmjs.org/@lxjx/react-transition-spring/-/react-transition-spring-1.2.5.tgz#26d0fb03391be2c7049183c4136f88923a8eb713"
-  integrity sha512-TARnZmbBcE7wA7SzhEN63sW3tQ0tC/uasLuglsHYUj0ZvbLuMqgEeiT04kXDY/hdK+BeRcs9ha86QiZNyiEiog==
+"@lxjx/react-transition-spring@^1.2.6":
+  version "1.2.6"
+  resolved "https://registry.npmjs.org/@lxjx/react-transition-spring/-/react-transition-spring-1.2.6.tgz#360d8d09ac5811f729739314bcf70e80c6beaf47"
+  integrity sha512-0e8eO2ECZtpQ2rrGp1gQ4RnRAZOTymyfdVAvnSyaUJ2f2pvCVygIA6ku4v6K4ccWHbSs9URLoJ697xy2SDfjwA==
   dependencies:
     "@babel/runtime" "^7.7.2"
     "@lxjx/hooks" "^1.16.3"
